@@ -1,4 +1,4 @@
-package org.example.TCP;
+package clients.TCP;
 
 import java.io.BufferedReader;
 import java.io.IOException;
