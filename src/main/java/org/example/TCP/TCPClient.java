@@ -9,36 +9,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TCPClient {
-
     public static void main(String[] args) {
-        String ip = "109.167.241.255";
-        int port = 6340;
+        String ip = "109.167.241.225";
+        int port = 601;
 
-        try (Socket socket = new Socket(ip, port);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+        try {
+            Socket socket = new Socket(ip, port);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             StringBuilder result = new StringBuilder();
-            char[] buffer = new char[65536];
-            int n;
-
-            while ((n = reader.read(buffer)) != -1) {
-                if (n != 4) {
-                    result.append(buffer, 0, n);
-                    break;
-                }
-                Thread.sleep(1000);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
             }
+
+            socket.close();
 
             Pattern pattern = Pattern.compile("Student17\\s\\S+\\s\\S+");
             Matcher matcher = pattern.matcher(result.toString());
-            int count = 0;
 
+            int count = 0;
             while (matcher.find() && count < 10) {
                 System.out.println(matcher.group());
                 count++;
             }
-
-        } catch (IOException | InterruptedException e) {
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
